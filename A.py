@@ -6,12 +6,10 @@ def getOOKModulation(ts, fc, bits):
     lenghtBits = len(bits)
     lenghtChunk = int(len(ts)/lenghtBits)
     A = []
-    print(len(ts))
     for i in range(lenghtBits):
         for j in range(lenghtChunk):
             A_for_Bit_i = bits[i]   
             A.append(A_for_Bit_i)
-    print(len(A))
     return A * pyl.sin(2.0 * pyl.pi * fc * ts)
 
 ## Transmitter code ##
