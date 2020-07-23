@@ -57,8 +57,6 @@ def from_bits_to_CDMA(b1, b2):
 
     # Luego, las señales se mezclan:
     sT = []
-    print(len(s1))
-    print(len(s2))
     for i in range(len(s1)):    # se puede usar s1 o s2
         bit = s1[i] + s2[i]
         sT.append(bit)

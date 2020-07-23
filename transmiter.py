@@ -10,9 +10,9 @@ ts = pyl.arange(0, 8, sampling_period)
 # Carrier Frecuency
 fc = 800
 
-def get_4PAM_modulation(ts, bits):
+def get_4PAM_modulation(ts, fc, bits):
     lenghtBits = len(bits)
-    lenghtChunk = 2 * len(ts)/lenghtBits    # Chunks now are double sized
+    lenghtChunk = 2 * len(ts)//lenghtBits    # Chunks now are double sized
     A = []  # Amplitudes
     currentBit = 0
     while (currentBit < lenghtBits):
@@ -33,9 +33,9 @@ def get_4PAM_modulation(ts, bits):
             A.append(A_for_current_bits)
     return A * pyl.sin(2.0 * pyl.pi * fc * ts)
 
-def getOOKModulation(ts, bits):
+def getOOKModulation(ts, fc, bits):
     lenghtBits = len(bits)
-    lenghtChunk = len(ts)/lenghtBits
+    lenghtChunk = int(len(ts)/lenghtBits)
     A = []
     for i in range(lenghtBits):
         for j in range(lenghtChunk):
@@ -43,8 +43,8 @@ def getOOKModulation(ts, bits):
             A.append(A_for_Bit_i)
     return A * pyl.sin(2.0 * pyl.pi * fc * ts)
 
-ym = getOOKModulation(ts, bits)
-y_paso2 = get_4PAM_modulation(ts, bits)
+ym = getOOKModulation(ts, fc, bits)
+y_paso2 = get_4PAM_modulation(ts, fc, bits)
 
 #TODO: Need to transmit signal with sound
 fs = 44100
