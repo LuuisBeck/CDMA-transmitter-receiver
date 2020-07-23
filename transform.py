@@ -47,11 +47,11 @@ def image_to_bits(name_file) :
             fullArrayBits += g_binary
             fullArrayBits += b_binary
 
-    print(len(fullArrayBits))
+    return fullArrayBits
 
 
 #-----------Conversion bits a Imagen-----------#
-def bitsToImage(fullArrayBits, name_for_file):
+def bits_to_image(fullArrayBits, name_for_file):
     # Los primeros 16 bits son el tamano en width y height respectivamente
     width = 0
     height = 0
