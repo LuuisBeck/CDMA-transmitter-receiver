@@ -10,7 +10,7 @@ def intTo8bitsArray(number):
     return result
 
 #-----------Conversion Imagen a bits-----------#
-def imageTobits(name_file) :
+def image_to_bits(name_file) :
     # Abrimos imagen
     img = Image.open(name_file)
 
@@ -51,53 +51,54 @@ def imageTobits(name_file) :
 
 
 #-----------Conversion bits a Imagen-----------#
-# Los primeros 16 bits son el tamano en width y height respectivamente
-width = 0
-height = 0
-str_width = ''
-str_height = ''
-for i in range(8):
-    str_width += str(fullArrayBits[i])
-    str_height += str(fullArrayBits[i + 8])
-width = int(str_width, 2) # Convertimos a int
-height = int(str_height, 2) # Convertimos a int
+def bitsToImage(fullArrayBits, name_for_file):
+    # Los primeros 16 bits son el tamano en width y height respectivamente
+    width = 0
+    height = 0
+    str_width = ''
+    str_height = ''
+    for i in range(8):
+        str_width += str(fullArrayBits[i])
+        str_height += str(fullArrayBits[i + 8])
+    width = int(str_width, 2) # Convertimos a int
+    height = int(str_height, 2) # Convertimos a int
 
-# Creamos matriz para guardar valor de RGB de la imagen
-img = np.zeros((height,width,3),np.uint8)
-totalPixeles = width*height
-x = 0
-y = 0
+    # Creamos matriz para guardar valor de RGB de la imagen
+    img = np.zeros((height,width,3),np.uint8)
+    totalPixeles = width*height
+    x = 0
+    y = 0
 
-# Obtenemos cada pixel dentro del array de bits
-for pixel in range(totalPixeles):
-    # Cada pixel tendrá 24 bits. 8 para R, 8 para G y 8 para B
-    init = 0 + 24*pixel
-    final = 8 + 24*pixel
-    r = 0
-    g = 0
-    b = 0
-    str_r = ''
-    str_g = ''
-    str_b = ''
-    for i in range(init, final):
-        str_r += str(fullArrayBits[i])
-        str_g += str(fullArrayBits[i + 8])
-        str_b += str(fullArrayBits[i + 16])
-    # Convertimos a int los valores de RGB
-    r = int(str_r, 2) 
-    g = int(str_g, 2)
-    b = int(str_b, 2)
-    # Guardamos el valor del pixel en su posicion correspondiente en la matriz nueva
-    img[x, y] = [r, g, b]
-    y += 1
-    if (y >= width):
-        y = 0
-        x += 1
+    # Obtenemos cada pixel dentro del array de bits
+    for pixel in range(totalPixeles):
+        # Cada pixel tendrá 24 bits. 8 para R, 8 para G y 8 para B
+        init = 0 + 24*pixel
+        final = 8 + 24*pixel
+        r = 0
+        g = 0
+        b = 0
+        str_r = ''
+        str_g = ''
+        str_b = ''
+        for i in range(init, final):
+            str_r += str(fullArrayBits[i])
+            str_g += str(fullArrayBits[i + 8])
+            str_b += str(fullArrayBits[i + 16])
+        # Convertimos a int los valores de RGB
+        r = int(str_r, 2) 
+        g = int(str_g, 2)
+        b = int(str_b, 2)
+        # Guardamos el valor del pixel en su posicion correspondiente en la matriz nueva
+        img[x, y] = [r, g, b]
+        y += 1
+        if (y >= width):
+            y = 0
+            x += 1
 
-print(totalPixeles)
-print(f"{width} x {height}")
+    print(totalPixeles)
+    print(f"{width} x {height}")
 
-# Guardamos imagen recibida en un nuevo archivo
-cv2.imwrite("received_image.png",img)
-result = Image.open('received_image.png')
-result.show()
+    # Guardamos imagen recibida en un nuevo archivo
+    cv2.imwrite(f"{name_for_file}.png", img)
+    result = Image.open(f"{name_for_file}.png")
+    result.show()
