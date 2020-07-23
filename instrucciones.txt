@@ -1,0 +1,12 @@
+Para poder realizar la transmisión y recepción de las 2 imágenes en 2 instancias de python,
+se deben seguir las siguientes instrucciones:
+
+Para la transmisión: (A.py)
+- Primero se toman las 2 imágenes a transmitir y se transforman a bits
+- Se toman esos bits y se codifican en CDMA
+- Tomamos CDMA y transmitimos sonido mediante modulación por frecuencia
+
+Para la recepción: (B.py)
+- Se recibe la señal de sonido modulado por frecuencia
+- Se decodifica CDMA para tener los bits de ambas imágenes
+- Transformamos los bits a imágenes y mostramos el resultado
