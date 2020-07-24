@@ -76,7 +76,6 @@ def imageBW_to_bits(name_file):
     for x in range(height):
         for y in range(width):
             value = np_img[x][y]
-            print(value)
             r = value[0]
             g = value[1]
             b = value[2]
