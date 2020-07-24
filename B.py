@@ -1,4 +1,5 @@
 from transform import bits_to_imageBW
+from cdma import from_CDMA_to_bits
 
 ## RECEIVER ##
 
@@ -17,19 +18,26 @@ def custom_demodulation(ts, myrecording, lenghtBits):
         mean = pyl.mean(allDataInCurrentChunk)
         print(mean)
         currentBit = 0
-        if (mean > 0.1):
-            currentBit = 1
+
+        # WARNING: This values depends on device types 
+        #          and volume used.
+        minForBit2 = 5
+        minForBit_2 = 1
+        if (mean >= minForBit2):
+            currentBit = 2
+        elif (mean >= minForBit_2 and mean < minForBit2):
+            currentBit = -2
         else:
             currentBit = 0
         bitsReceived.append(currentBit)
         currentChunk += 1
     return bitsReceived
 
-# This is the from: 
-#   2 images of 16x16 in one channel = 256
-#   bits to know size of images      = 16 
+# This is from: 
+#   2 images of 16x16 in one channel = 512
+#   bits to know size of each image  = 16 
 #                              TOTAL = 272
-lenghtBits = 272
+lenghtBits = 544
 
 duration = 8.0 #seconds
 fs = 44100
@@ -39,17 +47,23 @@ fs = 44100
 myrecording = sd.rec(int(duration * fs), samplerate=fs, channels=1)
 sd.wait()
 
-ts = pyl.arange(0, 8, 1/fs)
+sampling_period = 1/fs
+final = int(lenghtBits/2)
+ts = pyl.arange(0, final, sampling_period)
 
-originalBits = getOriginalBits_4PAM(ts, myrecording)
-print(originalBits)
-
+# Plotting received data
 pyl.plot(ts, myrecording)
 pyl.title("Senal recibida por receiver")
 pyl.xlabel("Tiempo (s)")
 pyl.ylabel("Nivel de senal")
 pyl.show()
 
+# Demodulation of received data
+originalBits = custom_demodulation(ts, myrecording)
 
+# split up data
+[bits1, bits2] = from_CDMA_to_bits(originalBits)
+
+# converting bits to image
 bits_to_imageBW(bits1, "result_1")
 bits_to_imageBW(bits2, "result_2")

@@ -44,7 +44,7 @@ ts = pyl.arange(0, final, sampling_period)
 # Carrier Frecuency
 fc = 800
 
-y = customModulation(ts, fc, cdma)
+y = custom_modulation(ts, fc, cdma)
 
 # Transmission of data
 fs = 44100

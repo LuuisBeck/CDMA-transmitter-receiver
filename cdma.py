@@ -77,5 +77,4 @@ def from_CDMA_to_bits(sT):
     toDigital(result1)
     toDigital(result2)
 
-    print(result1)
-    print(result2)
+    return [result1, result2]
