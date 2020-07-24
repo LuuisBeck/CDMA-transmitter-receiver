@@ -4,8 +4,8 @@ from cdma import from_bits_to_CDMA
 import sounddevice as sd
 
 def customModulation(ts, fc, bits):
-    # this custom ASK modulation (amplitude-shift modulation) is for support
-    # for CDMA, in this case: 0, -2, 2. Each number will have certain amplitude
+    # this custom ASK modulation (amplitude-shift modulation)
+    # is to support CDMA, in this case: 0, -2, 2. Each number will have certain amplitude
     lenghtBits = len(bits)
     lenghtChunk = int(len(ts)/lenghtBits)
     A = []
@@ -38,19 +38,19 @@ print(cdma)
 #-----Transmit CDMA via AM and OOK modulation-----#
 # time between samples
 sampling_period = 1/44100
-# Time period
-final = len(cdma)
-print(final)
+# Time period (2 "bits" per second)
+final = int(len(cdma)/2)
 ts = pyl.arange(0, final, sampling_period)
 # Carrier Frecuency
 fc = 800
 
 y = customModulation(ts, fc, cdma)
-# Plotting results
 
+# Transmission of data
 fs = 44100
 sd.play(y, fs, blocking=True)
 
+# Plotting results
 pyl.plot(ts, y)
 pyl.xlabel("tiempo (s)")
 pyl.ylabel("Nivel de senal")
