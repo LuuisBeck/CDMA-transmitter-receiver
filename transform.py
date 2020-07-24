@@ -10,7 +10,7 @@ def intTo8bitsArray(number):
     return result
 
 #-----------Conversion Imagen a bits-----------#
-def image_to_bits(name_file) :
+def image_to_bits(name_file):
     # Abrimos imagen
     img = Image.open(name_file)
 
