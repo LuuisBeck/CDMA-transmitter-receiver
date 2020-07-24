@@ -1,9 +1,11 @@
 import matplotlib.pylab as pyl
-from transform import imageBW_to_bits, bits_to_imageBW
+from transform import imageBW_to_bits
 from cdma import from_bits_to_CDMA
 import sounddevice as sd
 
-def customModulation(ts, fc, bits):
+## TRANSMITTER  ##
+
+def custom_modulation(ts, fc, bits):
     # this custom ASK modulation (amplitude-shift modulation)
     # is to support CDMA, in this case: 0, -2, 2. Each number will have certain amplitude
     lenghtBits = len(bits)
@@ -20,8 +22,6 @@ def customModulation(ts, fc, bits):
                 A_for_Bit_i = 1
             A.append(A_for_Bit_i)
     return A * pyl.sin(2.0 * pyl.pi * fc * ts)
-
-## Transmitter code ##
 
 #-----Transform images to bits-----#
 # due to restrictions with cdma,
