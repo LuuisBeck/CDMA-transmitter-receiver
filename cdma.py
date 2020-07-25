@@ -67,6 +67,9 @@ def from_bits_to_CDMA(b1, b2):
 def from_CDMA_to_bits(sT):
     # Cada receptor tiene su propia llave (k1, k2),
     # con la que se decodifican los datos
+    k1 = [0, 1]
+    k2 = [1, 1]
+    
     result1 = decodeData(sT, k1)
     result2 = decodeData(sT, k2)
 
