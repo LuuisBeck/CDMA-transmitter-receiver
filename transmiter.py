@@ -54,7 +54,6 @@ def custom_modulation(fc, bits, add_first_bit):
     ts = pyl.arange(0, final_time, sampling_period)
     global lenghtChunk
     lenghtChunk = int(len(ts)/lenghtBits)
-    print(len(ts))
     global A
     A = []
     if (add_first_bit):

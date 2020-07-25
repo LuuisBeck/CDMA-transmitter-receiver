@@ -5,6 +5,19 @@ import sounddevice as sd
 import time
 
 ## RECEIVER ##
+def cut_unused_data(data):
+    # cut recording until first bit appers
+    initial = 0
+    result = []
+    first_bit = False
+    while(not first_bit):
+        currentData = data[initial]
+        if (currentData > 0.09):
+            first_bit = True
+            result = myrecording[initial:]
+        else:
+            initial += 1
+    return result
 
 def custom_demodulation(ts, myrecording, lenghtBits):
     # this custom ASK modulation (amplitude-shift modulation)
@@ -13,19 +26,10 @@ def custom_demodulation(ts, myrecording, lenghtBits):
     bitsReceived = []
     currentChunk = 0
 
-    # cut recording until first bit appers
-    initial = 0
-    data = []
-    while(not first_bit):
-        currentData = myrecording[initial]
-        if (currentData > 0.09):
-            data = myrecording[initial:]
-        else:
-            initial += 1
     for i in range(lenghtBits):
         allDataInCurrentChunk = []
         for j in range(lenghtOneChunk):
-            currentData = data[j + (currentChunk * lenghtOneChunk)]
+            currentData = myrecording[j + (currentChunk * lenghtOneChunk)]
             positiveValue = abs(currentData)
             allDataInCurrentChunk.append(positiveValue)
         median = pyl.median(allDataInCurrentChunk)
@@ -53,26 +57,30 @@ def custom_demodulation(ts, myrecording, lenghtBits):
 #                              TOTAL = 272
 lenghtBits = 9
 
-duration = 5.0 #seconds
+duration = 6 #seconds
 fs = 44100
 
 myrecording = sd.rec(int(duration * fs), samplerate=fs, channels=1)
 sd.wait()
 
 sampling_period = 1/fs
-final = int(lenghtBits/2)
+final = lenghtBits/2
 ts = pyl.arange(0, final, sampling_period)
 
+data = cut_unused_data(myrecording)
+plot_x = pyl.arange(0, len(data)*sampling_period, sampling_period)
+
+# Demodulation of received data
+originalBits = custom_demodulation(ts, data, lenghtBits)
+print(originalBits)
+
 # Plotting received data
-pyl.plot(ts, myrecording)
+pyl.plot(plot_x, data)
 pyl.title("Senal recibida por receiver")
 pyl.xlabel("Tiempo (s)")
 pyl.ylabel("Nivel de senal")
 pyl.show()
 
-# Demodulation of received data
-originalBits = custom_demodulation(ts, myrecording, lenghtBits)
-print(originalBits)
 # split up data
 [bits1, bits2] = from_CDMA_to_bits(originalBits)
 
