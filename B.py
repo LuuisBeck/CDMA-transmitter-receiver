@@ -1,5 +1,8 @@
 from transform import bits_to_imageBW
 from cdma import from_CDMA_to_bits
+import matplotlib.pylab as pyl
+import sounddevice as sd
+import time
 
 ## RECEIVER ##
 
@@ -9,23 +12,33 @@ def custom_demodulation(ts, myrecording, lenghtBits):
     lenghtOneChunk = int(len(ts)/ lenghtBits)
     bitsReceived = []
     currentChunk = 0
+
+    # cut recording until first bit appers
+    initial = 0
+    data = []
+    while(not first_bit):
+        currentData = myrecording[initial]
+        if (currentData > 0.09):
+            data = myrecording[initial:]
+        else:
+            initial += 1
     for i in range(lenghtBits):
         allDataInCurrentChunk = []
         for j in range(lenghtOneChunk):
-            currentData = myrecording[j + (currentChunk * lenghtOneChunk)]
+            currentData = data[j + (currentChunk * lenghtOneChunk)]
             positiveValue = abs(currentData)
             allDataInCurrentChunk.append(positiveValue)
-        mean = pyl.mean(allDataInCurrentChunk)
-        print(mean)
+        median = pyl.median(allDataInCurrentChunk)
+        print(median)
         currentBit = 0
 
-        # WARNING: This values depends on device types 
+        # WARNING: This values depends on device types
         #          and volume used.
-        minForBit2 = 5
-        minForBit_2 = 1
-        if (mean >= minForBit2):
+        minForBit2 = 0.09
+        minForBit_2 = 0.03
+        if (median >= minForBit2):
             currentBit = 2
-        elif (mean >= minForBit_2 and mean < minForBit2):
+        elif (median >= minForBit_2 and median < minForBit2):
             currentBit = -2
         else:
             currentBit = 0
@@ -34,16 +47,15 @@ def custom_demodulation(ts, myrecording, lenghtBits):
     return bitsReceived
 
 # This is from: 
+# first bit to get when data start   = 1
 #   2 images of 16x16 in one channel = 512
 #   bits to know size of each image  = 16 
 #                              TOTAL = 272
-lenghtBits = 544
+lenghtBits = 9
 
-duration = 8.0 #seconds
+duration = 5.0 #seconds
 fs = 44100
 
-# Wait until transmiter begin to play sound, its more like 0.3 seconds
-# time.sleep(0.2)
 myrecording = sd.rec(int(duration * fs), samplerate=fs, channels=1)
 sd.wait()
 
@@ -59,8 +71,8 @@ pyl.ylabel("Nivel de senal")
 pyl.show()
 
 # Demodulation of received data
-originalBits = custom_demodulation(ts, myrecording)
-
+originalBits = custom_demodulation(ts, myrecording, lenghtBits)
+print(originalBits)
 # split up data
 [bits1, bits2] = from_CDMA_to_bits(originalBits)
 

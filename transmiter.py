@@ -7,7 +7,7 @@ bits = [2, 0, -2, 0, 0, 2, 2, 0]
 sampling_period = 1/44100
 # Time period
 final_time = len(bits)/2
-ts = pyl.arange(0, time, sampling_period)
+ts = pyl.arange(0, final_time, sampling_period)
 lenghtChunk = 0
 # Carrier Frecuency
 fc = 800
@@ -77,7 +77,7 @@ def custom_modulation(fc, bits, add_first_bit):
 
 ym = getOOKModulation(ts, fc, bits)
 y_paso2 = get_4PAM_modulation(ts, fc, bits)
-y_final = customModulation(fc, bits, True)
+y_final = custom_modulation(fc, bits, add_first_bit=True)
 
 #TODO: Need to transmit signal with sound
 fs = 44100
