@@ -17,6 +17,7 @@ def custom_modulation(fc, bits, add_first_bit):
     # this custom ASK modulation (amplitude-shift modulation) is for support
     # for CDMA, in this case: 0, -2, 2. Each number will have certain amplitude
     lenghtBits = len(bits)
+    print(lenghtBits)
     final_time = lenghtBits / 2
     global ts
     ts = pyl.arange(0, final_time, sampling_period)
@@ -45,15 +46,16 @@ def custom_modulation(fc, bits, add_first_bit):
 
 #-----Transform images to bits-----#
 # due to restrictions with cdma,
-# images must be squared (16x16 or 40x40) and the same size.
+# images must be squared and 16x16
 file1 = 'f.png'
 file2 = 'invader.png'
 bits1 = imageBW_to_bits(file1)
 bits2 = imageBW_to_bits(file2)
+print(bits1)
+print(bits2)
 
 #-----bits to CDMA-----#
 cdma = from_bits_to_CDMA(bits1, bits2)
-print(cdma)
 
 #-----Transmit CDMA via AM and custom modulation-----#
 # time between samples

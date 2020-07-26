@@ -64,14 +64,6 @@ def imageBW_to_bits(name_file):
 
     fullArrayBits = []
 
-    # Primeros 16 bits, indican tamano de width y height respectivamente
-    # WARNING: El limite del tamano de la imagen debe ser de 255 x 255,
-    #          solo asi el programa puede saber el tamano de la imagen al recibir los bits
-    arrayWidth = intTo8bitsArray(width)
-    arrayHeight = intTo8bitsArray(height)
-    fullArrayBits += arrayWidth
-    fullArrayBits += arrayHeight
-
     # Convertimos cada R, G y B en binario con 8 bits cada uno
     for x in range(height):
         for y in range(width):
@@ -143,16 +135,8 @@ def bits_to_image(fullArrayBits, name_for_file):
     result.show()
 
 def bits_to_imageBW(fullArrayBits, name_for_file):
-    # Los primeros 16 bits son el tamano en width y height respectivamente
-    width = 0
-    height = 0
-    str_width = ''
-    str_height = ''
-    for i in range(8):
-        str_width += str(fullArrayBits[i])
-        str_height += str(fullArrayBits[i + 8])
-    width = int(str_width, 2) # Convertimos a int
-    height = int(str_height, 2) # Convertimos a int
+    width = 16
+    height = 16
 
     # Creamos matriz para guardar valor de RGB de la imagen
     img = np.zeros((height,width,3),np.uint8)

@@ -33,7 +33,6 @@ def custom_demodulation(ts, myrecording, lenghtBits):
             positiveValue = abs(currentData)
             allDataInCurrentChunk.append(positiveValue)
         median = pyl.median(allDataInCurrentChunk)
-        print(median)
         currentBit = 0
 
         # WARNING: This values depends on device types
@@ -55,9 +54,9 @@ def custom_demodulation(ts, myrecording, lenghtBits):
 #   2 images of 16x16 in one channel = 512
 #   bits to know size of each image  = 16 
 #                              TOTAL = 272
-lenghtBits = 9
+lenghtBits = 545
 
-duration = 6 #seconds
+duration = 280 #seconds
 fs = 44100
 
 myrecording = sd.rec(int(duration * fs), samplerate=fs, channels=1)
@@ -72,7 +71,6 @@ plot_x = pyl.arange(0, len(data)*sampling_period, sampling_period)
 
 # Demodulation of received data
 originalBits = custom_demodulation(ts, data, lenghtBits)
-print(originalBits)
 
 # Plotting received data
 pyl.plot(plot_x, data)
@@ -81,8 +79,14 @@ pyl.xlabel("Tiempo (s)")
 pyl.ylabel("Nivel de senal")
 pyl.show()
 
+# delete first bit
+originalBits = originalBits[1:]
+
 # split up data
 [bits1, bits2] = from_CDMA_to_bits(originalBits)
+print(bits1)
+print(bits2)
+
 
 # converting bits to image
 bits_to_imageBW(bits1, "result_1")
